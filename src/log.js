@@ -1,3 +1,4 @@
+import path from 'path';
 import Moment from 'moment-timezone';
 import winston from 'winston';
 import 'winston-daily-rotate-file';
@@ -5,7 +6,7 @@ import 'winston-daily-rotate-file';
 const consoleTransport = new winston.transports.Console({ colorize: true });
 
 const fileTransport = new (winston.transports.DailyRotateFile)({
-  filename: './log/auth.%DATE%.log',
+  filename: path.join(config.logDir, 'auth.%DATE%.log'),
   maxDays: 7,
 });
 
