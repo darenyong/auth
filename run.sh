@@ -9,4 +9,5 @@ docker run -d --name auth \
   -l "traefik.port=8080" \
   --network proxy \
   -e "NODE_ENV=development" \
+  -v ./log:/usr/src/app/log \
   auth:1.0.0
