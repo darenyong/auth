@@ -17,7 +17,7 @@ router.get('/', function (req, res, next) {
     const secure = true;
     const maxAge = 60;
     res.cookie('daren-auth-token', 'myJwt', { domain, secure, maxAge });
-    const goto = `${proto}:\\${host}${uri}`;
+    const goto = `${proto}://${host}${uri}`;
     console.log('redirect to', goto);
     res.redirect(goto);
     return;
