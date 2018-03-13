@@ -8,21 +8,34 @@ router.get('/', function (req, res, next) {
   const proto = req.get('x-forwarded-proto');
   const host = req.get('x-forwarded-host');
   const uri = req.get('x-forwarded-uri');
+
+  // const proto = 'http';
+  // const host = 'localhost:8080';
+  // const uri = '/';
+
   console.log('cookies', req.cookies);
   const cookie = req.cookies['daren-auth-token'];
   console.log('daren-auth-token', cookie);
 
-  if (uri === '/jenkins' && cookie !== 'myJwt') {
-    const domain = 'darenyong.com';
-    const secure = true;
-    const maxAge = 60;
-    res.cookie('daren-auth-token', 'myJwt', { domain, secure, maxAge });
-    const goto = `${proto}://${host}${uri}`;
-    console.log('redirect to', goto);
-    res.redirect(goto);
-    return;
+  try {
+    if (uri === '/' && cookie !== 'myJwt') {
+      const goto = `${proto}://${host}${uri}`;
+      console.log('redirect to', goto);
+
+      const domain = 'darenyong.com';
+      const secure = false;
+      const maxAge = 60000;
+      const httpOnly = false;
+      res.cookie('daren-auth-token', 'myJwt', { secure, maxAge, httpOnly });
+      res.redirect(goto);
+      return;
+    }
+  } catch (err) {
+    console.log('error ***', err);
   }
-  res.json({ title: 'auth hello', uri });
+
+  console.log('respond with auth hello');
+  res.json({ title: 'auth hello', uri, cookie });
 });
 
 module.exports = router;
