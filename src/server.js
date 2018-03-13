@@ -29,7 +29,7 @@ module.exports = class Server {
   constructor(listenPort) {
     this.listenPort = listenPort;
     this.app = express();
-    this.app.use(cookieParser);
+    this.app.use(cookieParser());
 
     // setup routes
     this.app.use('/', routes);
