@@ -18,7 +18,7 @@ router.get('/', function (req, res, next) {
   console.log('daren-auth-token', cookie);
 
   try {
-    if (uri === '/' && cookie !== 'myJwt') {
+    if (uri === '/jenkins' && cookie !== 'myJwt') {
       const goto = `${proto}://${host}${uri}`;
       console.log('redirect to', goto);
 
