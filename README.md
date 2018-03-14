@@ -12,7 +12,7 @@ the user has already successfully logged in before attempting
 operations that modify data on the server (POST/DELETE).
 
 User Agents may change the method to a GET on redirect
-according to HTTP spec:
+according to HTTP spec, [section 9.3](https://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-spec.html):
 
 > If the 302 status code is received in response to a request using the POST method, the user agent must not automatically redirect the request unless it can be confirmed by the user, since this might change the conditions under which the request was issued.
 >
