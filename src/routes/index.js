@@ -57,7 +57,7 @@ router.get('/', function (req, res, next) {
   }
 
   console.log('respond with auth hello');
-  res.json({ title: 'auth hello', uri, cookie });
+  res.json({ title: 'auth hello' });
 });
 
 module.exports = router;
