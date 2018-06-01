@@ -17,7 +17,8 @@ const authUrl = 'https://darenyong.auth0.com/authorize?'
   + querystring.stringify({audience, scope, response_type, client_id, redirect_uri, state});
 
 router.get('/callback', function (req, res, next) {
-  const parsed = url.parse(req.get('x-forwarded-uri'));
+  console.log('/callback req.url', req.originalUrl);
+  const parsed = url.parse(req.originalUrl);
   console.log('url parse', parsed);
   res.json({msg: 'auth callback'});
 });
