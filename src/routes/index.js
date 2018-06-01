@@ -18,8 +18,10 @@ const authUrl = 'https://darenyong.auth0.com/authorize?'
 
 router.get('/callback', function (req, res, next) {
   console.log('/callback req.url', req.originalUrl);
-  const parsed = url.parse(req.originalUrl);
-  console.log('url parse', parsed);
+
+  const queryPart = req.originalUrl.substring( req.originalUrl.indexOf('?') + 1 );
+  const parsed = querystring.parse(queryPart);
+  console.log('query parsed', parsed);
   res.json({msg: 'auth callback'});
 });
 
