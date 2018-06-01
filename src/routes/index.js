@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 // const request = require('superagent');
 const querystring = require('querystring');
+const url = require('url');
 const fs = require('fs');
 const path = require('path');
 
@@ -16,8 +17,8 @@ const authUrl = 'https://darenyong.auth0.com/authorize?'
   + querystring.stringify({audience, scope, response_type, client_id, redirect_uri, state});
 
 router.get('/callback', function (req, res, next) {
-  const query = querystring.parse(req.get('x-forwarded-uri'));
-  console.log('query', query);
+  const parsed = url.parse(req.get('x-forwarded-uri'));
+  console.log('url parse', parsed);
   res.json({msg: 'auth callback'});
 });
 
