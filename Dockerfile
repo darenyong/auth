@@ -1,12 +1,10 @@
-FROM node:carbon-alpine as node-base
+FROM node:carbon-alpine
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
 RUN npm install --only=production
-
-FROM node-base as src-base
 
 COPY . .
 
