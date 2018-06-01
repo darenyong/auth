@@ -23,7 +23,7 @@ router.get('/callback', function (req, res, next) {
 // home page
 router.get('/', function (req, res, next) {
   const { headers } = req;
-  log.info('GET auth', headers);
+  // log.info('GET auth', headers);
   const proto = req.get('x-forwarded-proto');
   const host = req.get('x-forwarded-host');
   const uri = req.get('x-forwarded-uri');
@@ -36,7 +36,7 @@ router.get('/', function (req, res, next) {
   // const cookie = req.cookies['daren-auth-token'];
   // console.log('daren-auth-token', cookie);
   if (uri.startsWith('/auth')) {
-    console.log('detected uri startsWith /auth, allow thru');
+    console.log('detected uri startsWith /auth, bypass security');
     res.send('ok');
     return;
   }
