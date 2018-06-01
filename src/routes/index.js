@@ -40,8 +40,14 @@ router.get('/callback', function (req, res, next) {
     .set('content-type', 'application/json')
     .send(body)
     .then(oauth => {
-      console.log('got token success', oauth.body);
-      res.json({msg: 'auth callback success got token'});
+      console.log('got token success', oauth.body.access_token);
+      // res.json({msg: 'auth callback success got token'});
+      const secure = false;
+      const maxAge = 60000;
+      const httpOnly = false;
+      res.cookie('daren-auth-token', oauth.body.access_token, { secure, maxAge, httpOnly });
+      console.log('set access_token cookie, redirecting back to darenyong.com/');
+      res.redirect('https://darenyong.com')
     })
     .catch(err => {
       console.log('error getting token', err);
