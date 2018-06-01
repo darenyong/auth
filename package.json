@@ -11,6 +11,7 @@
     "express": "^4.16.2",
     "lodash": "^4.17.5",
     "moment-timezone": "^0.5.14",
+    "superagent": "^3.8.3",
     "winston": "^3.0.0-rc2",
     "winston-daily-rotate-file": "^2.0.0-rc.6"
   },
