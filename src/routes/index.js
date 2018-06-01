@@ -32,9 +32,9 @@ router.get('/', function (req, res, next) {
   // const host = 'localhost:8080';
   // const uri = '/';
 
-  console.log('cookies', req.cookies);
-  const cookie = req.cookies['daren-auth-token'];
-  console.log('daren-auth-token', cookie);
+  // console.log('cookies', req.cookies);
+  // const cookie = req.cookies['daren-auth-token'];
+  // console.log('daren-auth-token', cookie);
 
 
   try {
@@ -42,8 +42,7 @@ router.get('/', function (req, res, next) {
     if (uri === '/jenkins') {
       // const goto = `${proto}://${host}${uri}`;
       const goto = authUrl;
-
-      console.log('redirect to', goto);
+      console.log('redirect to auth', goto);
 
       // const domain = 'darenyong.com';
       // const secure = false;
