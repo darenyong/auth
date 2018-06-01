@@ -35,7 +35,11 @@ router.get('/', function (req, res, next) {
   // console.log('cookies', req.cookies);
   // const cookie = req.cookies['daren-auth-token'];
   // console.log('daren-auth-token', cookie);
-
+  if (uri.startsWith('/auth')) {
+    console.log('detected uri startsWith /auth, allow thru');
+    res.send('ok');
+    return;
+  }
 
   try {
     // if (uri === '/jenkins' && cookie !== 'myJwt') {
