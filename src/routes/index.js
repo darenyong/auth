@@ -10,6 +10,7 @@ const audience='https://darenyong.com/jenkins';
 const scope='read:jenkins';
 const response_type='code';
 const client_id=fs.readFileSync(path.join(__dirname, '..', '..', 'client_id'), 'utf-8');
+const client_secret=fs.readFileSync(path.join(__dirname, '..', '..', 'client_secret'), 'utf-8');
 const redirect_uri='https://darenyong.com/auth/callback';
 const state='goofy';
 
@@ -22,7 +23,30 @@ router.get('/callback', function (req, res, next) {
   const queryPart = req.originalUrl.substring( req.originalUrl.indexOf('?') + 1 );
   const parsed = querystring.parse(queryPart);
   console.log('query parsed', parsed);
-  res.json({msg: 'auth callback'});
+
+  // TODO: check parsed.state as nounce to avoid replay attack
+
+  const body = {
+    grant_type: 'authorization_code',
+    client_id,
+    client_secret,
+    code: parsed.code,
+    redirect_uri
+  };
+
+  request
+    .post('https://darenyong.auth0.com/oauth/token')
+    .set('content-type', 'application/json')
+    .send(body)
+    .then(res => {
+      console.log('got token success', res);
+      res.json({msg: 'auth callback success got token'});
+    })
+    .catch(err => {
+      console.log('error getting token', err);
+      res.status(400);
+      res.send('error getting token');
+    });
 });
 
 
