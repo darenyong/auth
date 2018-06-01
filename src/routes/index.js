@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const request = require('superagent');
+const request = require('superagent');
 const querystring = require('querystring');
 const url = require('url');
 const fs = require('fs');
