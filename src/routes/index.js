@@ -39,8 +39,8 @@ router.get('/callback', function (req, res, next) {
     .post('https://darenyong.auth0.com/oauth/token')
     .set('content-type', 'application/json')
     .send(body)
-    .then(res => {
-      console.log('got token success', res.body);
+    .then(oauth => {
+      console.log('got token success', oauth.body);
       res.json({msg: 'auth callback success got token'});
     })
     .catch(err => {
