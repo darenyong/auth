@@ -12,7 +12,7 @@ const audience = 'https://darenyong.com/jenkins';
 const scope = 'read:jenkins';
 const response_type = 'code';
 const client_id = fs.readFileSync(path.join(__dirname, '..', '..', 'client_id'), 'utf-8');
-const redirect_uri = 'https://darenyong.com/auth/callback';
+const redirect_uri = 'https://darenyong.com/auth/callback?dest=foobar';
 const state = 'goofy';
 
 // needed to request token
@@ -27,6 +27,7 @@ const setCookie = (res, token) => {
 
 router.get('/callback', function (req, res, next) {
   try {
+    console.log('/callback url', req.originalUrl);
     log.info('got auth code, exchange for token');
     const queryPart = req.originalUrl.substring(req.originalUrl.indexOf('?') + 1);
     const parsed = querystring.parse(queryPart);
