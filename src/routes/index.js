@@ -71,8 +71,7 @@ router.get('/', function (req, res, next) {
     const dest = req.get('x-forwarded-uri');    // '/'
 
     if (dest.startsWith('/auth')) {
-      console.log('request for', dest, 'bypass security');
-      res.send('ok');
+      res.send('ok'); // bypass security for any request to /auth/...
       return;
     }
 
