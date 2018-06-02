@@ -5,7 +5,6 @@ const querystring = require('querystring');
 const fs = require('fs');
 const path = require('path');
 
-
 const cookieName = 'daren-auth-token';
 
 // needed to request code
@@ -14,7 +13,7 @@ const scope = 'read:jenkins';
 const response_type = 'code';
 const client_id = fs.readFileSync(path.join(__dirname, '..', '..', 'client_id'), 'utf-8');
 const callback_uri = 'https://darenyong.com/auth/callback';
-const state = 'goofy';
+const state = 'jaleIjlwMF';
 
 // needed to request token
 const client_secret = fs.readFileSync(path.join(__dirname, '..', '..', 'client_secret'), 'utf-8');
@@ -41,7 +40,7 @@ router.get('/callback', function (req, res, next) {
     const parsed = querystring.parse(queryPart);
     const redirect_uri = decodeURIComponent(parsed.dest);
 
-    // TODO: check parsed.state here as nounce to avoid replay attack
+    // NOTE: don't bother checking state nonce
 
     const body = {
       grant_type: 'authorization_code',
@@ -56,6 +55,7 @@ router.get('/callback', function (req, res, next) {
       .set('content-type', 'application/json')
       .send(body)
       .then(oauth => {
+        console.log('oath.body', oauth.body);
         setCookie(res, oauth.body.access_token);
         log.info('got token success, redirecting back to original requested url');
         res.redirect(redirect_uri);
