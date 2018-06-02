@@ -14,7 +14,7 @@ const scope = 'profile';
 const response_type = 'code';
 const client_id = fs.readFileSync(path.join(__dirname, '..', '..', 'client_id'), 'utf-8');
 const callback_uri = 'https://darenyong.com/auth/callback';
-const state = 'jaleIjlwMF';
+// const state = 'jaleIjlwMF';
 
 // needed to request token
 const client_secret = fs.readFileSync(path.join(__dirname, '..', '..', 'client_secret'), 'utf-8');
@@ -29,7 +29,7 @@ const setCookie = (res, token) => {
 const createRedirectUri = (proto, host, url) => `${callback_uri}?dest=${encodeURIComponent(`${proto}://${host}${url}`)}`;
 
 const createAuthUrl = redirect_uri => {
-  let params = { audience, scope, response_type, client_id, redirect_uri, state };
+  let params = { audience, scope, response_type, client_id, redirect_uri };
   return `https://darenyong.auth0.com/authorize?${querystring.stringify(params)}`;
 };
 
@@ -40,8 +40,6 @@ router.get('/callback', function (req, res, next) {
     const queryPart = req.originalUrl.substring(req.originalUrl.indexOf('?') + 1);
     const parsed = querystring.parse(queryPart);
     const redirect_uri = decodeURIComponent(parsed.dest);
-
-    // NOTE: don't bother checking state nonce
 
     const body = {
       grant_type: 'authorization_code',
