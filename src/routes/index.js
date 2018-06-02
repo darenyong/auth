@@ -21,9 +21,15 @@ const client_secret=fs.readFileSync(path.join(__dirname, '..', '..', 'client_sec
 const authUrl = 'https://darenyong.auth0.com/authorize?'
   + querystring.stringify({audience, scope, response_type, client_id, redirect_uri, state});
 
-router.get('/callback', function (req, res, next) {
-  console.log('/callback req.url', req.originalUrl);
+const setCookie = (res, token) => {
+  console.log('setting new cookie');
+  const secure = false;
+  const maxAge = 60000;
+  const httpOnly = false;
+  res.cookie(cookieName, token, { secure, maxAge, httpOnly });
+};
 
+router.get('/callback', function (req, res, next) {
   const queryPart = req.originalUrl.substring( req.originalUrl.indexOf('?') + 1 );
   const parsed = querystring.parse(queryPart);
   console.log('callback query parsed', parsed);
@@ -38,19 +44,14 @@ router.get('/callback', function (req, res, next) {
     redirect_uri
   };
 
-  console.log('requesting token');
+  console.log('exchanging code for token');
   request
     .post('https://darenyong.auth0.com/oauth/token')
     .set('content-type', 'application/json')
     .send(body)
     .then(oauth => {
-      console.log('got token success', oauth.body.access_token);
-      // res.json({msg: 'auth callback success got token'});
-      const secure = false;
-      const maxAge = 60000;
-      const httpOnly = false;
-      res.cookie(cookieName, oauth.body.access_token, { secure, maxAge, httpOnly });
-      console.log('set cookie, redirecting back to original requested url');
+      setCookie(res, oauth.body.access_token);
+      console.log('redirecting back to original requested url');
       res.redirect('https://darenyong.com')
     })
     .catch(err => {
