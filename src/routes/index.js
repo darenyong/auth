@@ -60,7 +60,7 @@ router.get('/callback', function (req, res, next) {
       .then(oauth => {
         setCookie(res, oauth.body.access_token);
         log.info('got token success, redirecting back to original requested url');
-        res.redirect('https://darenyong.com')
+        res.redirect(redirect_uri);
       })
       .catch(err => {
         log.error('error in /oath/token request', err);
