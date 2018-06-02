@@ -26,7 +26,7 @@ const setCookie = (res, token) => {
   res.cookie(cookieName, token, { secure, maxAge, httpOnly });
 };
 
-const createRedirectUri = url => `${callback_uri}?dest=${encodeURIComponent(url)}`;
+const createRedirectUri = url => `https://darenyong.com${callback_uri}?dest=${encodeURIComponent(url)}`;
 
 const createAuthUrl = redirect_uri => {
   let params = { audience, scope, response_type, client_id, redirect_uri, state };
