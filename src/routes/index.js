@@ -28,12 +28,10 @@ const setCookie = (res, token) => {
 router.get('/callback', function (req, res, next) {
   try {
     log.info('got auth code, exchange for token');
-    console.log('original url', req.originalUrl);
-
     const queryPart = req.originalUrl.substring(req.originalUrl.indexOf('?') + 1);
     const parsed = querystring.parse(queryPart);
 
-    // TODO: check parsed.state as nounce to avoid replay attack
+    // TODO: check parsed.state here as nounce to avoid replay attack
 
     const body = {
       grant_type: 'authorization_code',
@@ -57,6 +55,7 @@ router.get('/callback', function (req, res, next) {
         res.status(500);
         res.send('error in /oath/token request');
       });
+
   } catch (err) {
     log.error('error exchanging code for token', err);
     res.status(500);
@@ -67,16 +66,9 @@ router.get('/callback', function (req, res, next) {
 // home page - all auth requests land here
 router.get('/', function (req, res, next) {
   try {
-    // const { headers } = req;
-    // log.info('GET auth', headers);
-    const proto = req.get('x-forwarded-proto');
-    const host = req.get('x-forwarded-host');
-    const dest = req.get('x-forwarded-uri');
-
-    // example:
-    // const proto = 'http';
-    // const host = 'localhost:8080';
-    // const uri = '/';
+    const proto = req.get('x-forwarded-proto'); // http
+    const host = req.get('x-forwarded-host');   // localhost:8080
+    const dest = req.get('x-forwarded-uri');    // '/'
 
     if (dest.startsWith('/auth')) {
       console.log('request for', dest, 'bypass security');
@@ -93,16 +85,20 @@ router.get('/', function (req, res, next) {
       // TODO: verify cookie
       const validCookie = true;
       if (validCookie) {
-        log.info('cookie ok, auth success');
-        // cookie ok, not expired, then successful auth
-        res.send('cookie ok, auth success');
+        log.info('cookie present and ok, auth success');
+        res.send('cookie present and ok, auth success');
         return;
       }
     }
+
+    // TODO: How can exchange code for token redirect back to original URL requested by user?
+    // TODO: do we need a new audience for each endpoint? can jenkins be protected by auth0 only? Force 2FA?
+    // TODO: how are scopes set on a per user basis?
     log.info('no cookie or invalid cookie, force login');
     const authUrl = 'https://darenyong.auth0.com/authorize?'
-      + querystring.stringify({ audience, scope, response_type, client_id, redirect_uri, state, dest });
+      + querystring.stringify({ audience, scope, response_type, client_id, redirect_uri, state });
     res.redirect(authUrl);
+
   } catch (err) {
     log.error('error checking for cookie', err);
     res.status(500);

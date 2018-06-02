@@ -3,7 +3,9 @@
 # clean out old containers and images before build
 docker stop auth
 docker rm auth
-docker rmi auth:1.0.0
+
+# for now, leave garbage untagged images to speed up
+# docker rmi auth:1.0.0
 
 VERSION="1.0.0"
 tag="auth:${VERSION}"
