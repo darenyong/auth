@@ -40,7 +40,6 @@ router.get('/callback', function (req, res, next) {
     const queryPart = req.originalUrl.substring(req.originalUrl.indexOf('?') + 1);
     const parsed = querystring.parse(queryPart);
     const redirect_uri = decodeURIComponent(parsed.dest);
-    console.log('dest url', redirect_uri);
 
     // TODO: check parsed.state here as nounce to avoid replay attack
 
