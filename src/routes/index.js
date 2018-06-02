@@ -9,7 +9,8 @@ const cookieName = 'daren-auth-token';
 
 // needed to request code
 const audience = 'https://darenyong.com/jenkins';
-const scope = 'read:jenkins';
+// const scope = 'read:jenkins';
+const scope = 'profile';
 const response_type = 'code';
 const client_id = fs.readFileSync(path.join(__dirname, '..', '..', 'client_id'), 'utf-8');
 const callback_uri = 'https://darenyong.com/auth/callback';
