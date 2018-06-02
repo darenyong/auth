@@ -102,7 +102,6 @@ router.get('/', function (req, res, next) {
       }
     }
 
-    // TODO: How can exchange code for token redirect back to original URL requested by user?
     // TODO: do we need a new audience for each endpoint? can jenkins be protected by auth0 only? Force 2FA?
     // TODO: how are scopes set on a per user basis?
     log.info('no cookie or invalid cookie, force login');
