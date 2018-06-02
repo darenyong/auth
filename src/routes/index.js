@@ -18,11 +18,7 @@ const state = 'goofy';
 // needed to request token
 const client_secret = fs.readFileSync(path.join(__dirname, '..', '..', 'client_secret'), 'utf-8');
 
-const authUrl = 'https://darenyong.auth0.com/authorize?'
-  + querystring.stringify({ audience, scope, response_type, client_id, redirect_uri, state });
-
 const setCookie = (res, token) => {
-  console.log('setting new cookie');
   const secure = false;
   const maxAge = 60000;
   const httpOnly = false;
@@ -32,10 +28,10 @@ const setCookie = (res, token) => {
 router.get('/callback', function (req, res, next) {
   try {
     log.info('got auth code, exchange for token');
+    console.log('original url', req.originalUrl);
 
     const queryPart = req.originalUrl.substring(req.originalUrl.indexOf('?') + 1);
     const parsed = querystring.parse(queryPart);
-    console.log('callback query parsed', parsed);
 
     // TODO: check parsed.state as nounce to avoid replay attack
 
@@ -53,7 +49,7 @@ router.get('/callback', function (req, res, next) {
       .send(body)
       .then(oauth => {
         setCookie(res, oauth.body.access_token);
-        log.info('redirecting back to original requested url');
+        log.info('got token success, redirecting back to original requested url');
         res.redirect('https://darenyong.com')
       })
       .catch(err => {
@@ -75,15 +71,15 @@ router.get('/', function (req, res, next) {
     // log.info('GET auth', headers);
     const proto = req.get('x-forwarded-proto');
     const host = req.get('x-forwarded-host');
-    const uri = req.get('x-forwarded-uri');
+    const dest = req.get('x-forwarded-uri');
 
     // example:
     // const proto = 'http';
     // const host = 'localhost:8080';
     // const uri = '/';
 
-    if (uri.startsWith('/auth')) {
-      console.log('request for', uri, 'bypass security');
+    if (dest.startsWith('/auth')) {
+      console.log('request for', dest, 'bypass security');
       res.send('ok');
       return;
     }
@@ -94,6 +90,7 @@ router.get('/', function (req, res, next) {
       if (expired) {
         // TODO: renew
       }
+      // TODO: verify cookie
       const validCookie = true;
       if (validCookie) {
         log.info('cookie ok, auth success');
@@ -103,6 +100,8 @@ router.get('/', function (req, res, next) {
       }
     }
     log.info('no cookie or invalid cookie, force login');
+    const authUrl = 'https://darenyong.auth0.com/authorize?'
+      + querystring.stringify({ audience, scope, response_type, client_id, redirect_uri, state, dest });
     res.redirect(authUrl);
   } catch (err) {
     log.error('error checking for cookie', err);
