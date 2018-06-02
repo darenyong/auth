@@ -53,7 +53,7 @@ router.get('/callback', function (req, res, next) {
       .send(body)
       .then(oauth => {
         setCookie(res, oauth.body.access_token);
-        console.log('redirecting back to original requested url');
+        log.info('redirecting back to original requested url');
         res.redirect('https://darenyong.com')
       })
       .catch(err => {
@@ -89,7 +89,6 @@ router.get('/', function (req, res, next) {
     }
 
     const cookie = req.cookies[cookieName];
-    console.log('cookie', cookie);
     if (cookie) { // validate the cookie
       const expired = false;
       if (expired) {
@@ -97,6 +96,7 @@ router.get('/', function (req, res, next) {
       }
       const validCookie = true;
       if (validCookie) {
+        log.info('cookie ok, auth success');
         // cookie ok, not expired, then successful auth
         res.send('cookie ok, auth success');
         return;
