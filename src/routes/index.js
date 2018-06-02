@@ -26,7 +26,7 @@ const setCookie = (res, token) => {
   res.cookie(cookieName, token, { secure, maxAge, httpOnly });
 };
 
-const createRedirectUri = url => `${callback_uri}?dest=${encodeURIComponent(`https://darenyong.com${url}`)}`;
+const createRedirectUri = (proto, host, url) => `${callback_uri}?dest=${encodeURIComponent(`${proto}://${host}${url}`)}`;
 
 const createAuthUrl = redirect_uri => {
   let params = { audience, scope, response_type, client_id, redirect_uri, state };
@@ -36,12 +36,11 @@ const createAuthUrl = redirect_uri => {
 
 router.get('/callback', function (req, res, next) {
   try {
-    console.log('/callback url', req.originalUrl);
     log.info('got auth code, exchange for token');
     const queryPart = req.originalUrl.substring(req.originalUrl.indexOf('?') + 1);
     const parsed = querystring.parse(queryPart);
     const redirect_uri = decodeURIComponent(parsed.dest);
-    console.log('/callback redirect', redirect_uri);
+    console.log('dest url', redirect_uri);
 
     // TODO: check parsed.state here as nounce to avoid replay attack
 
@@ -105,7 +104,7 @@ router.get('/', function (req, res, next) {
     // TODO: do we need a new audience for each endpoint? can jenkins be protected by auth0 only? Force 2FA?
     // TODO: how are scopes set on a per user basis?
     log.info('no cookie or invalid cookie, force login');
-    res.redirect(createAuthUrl(createRedirectUri(dest)));
+    res.redirect(createAuthUrl(createRedirectUri(proto, host, dest)));
 
   } catch (err) {
     log.error('error checking for cookie', err);
